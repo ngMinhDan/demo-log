@@ -89,7 +89,7 @@ const TableLog = () => {
   const [form] = Form.useForm();
 
   const getData = async () => {
-    await axios.get('http://139.180.147.199:8090/logs')
+    await axios.get('log/logs')
       .then(res => {
         let data = res?.data.data
         setData(data)

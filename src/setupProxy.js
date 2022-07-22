@@ -1,6 +1,6 @@
 // import { createProxyMiddleware } from 'http-proxy-middleware'
 const { createProxyMiddleware } = require('http-proxy-middleware')
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
     createProxyMiddleware('/addressService', {
       target: 'http://139.180.147.199:8082',
@@ -46,6 +46,19 @@ module.exports = function(app) {
       changeOrigin: true,
       pathRewrite: {
         '^/mailService': ''
+      },
+      headers: {
+        Connection: 'keep-alive'
+      }
+    })
+  )
+
+  app.use(
+    createProxyMiddleware('/log', {
+      target: 'http://139.180.147.199:8090',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/log': ''
       },
       headers: {
         Connection: 'keep-alive'
