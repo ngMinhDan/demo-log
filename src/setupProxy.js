@@ -1,4 +1,3 @@
-// import { createProxyMiddleware } from 'http-proxy-middleware'
 const { createProxyMiddleware } = require('http-proxy-middleware')
 module.exports = function (app) {
   app.use(
@@ -16,7 +15,7 @@ module.exports = function (app) {
 
   app.use(
     createProxyMiddleware('/accountService', {
-      target: 'http://139.180.147.199:8080',
+      target: 'https://accounts.nika.guru/',
       changeOrigin: true,
       pathRewrite: {
         '^/accountService': ''
@@ -29,7 +28,7 @@ module.exports = function (app) {
 
   app.use(
     createProxyMiddleware('/coinPriceService', {
-      target: 'http://139.180.147.199:8081',
+      target: 'https://coinsprices.nika.guru',
       changeOrigin: true,
       pathRewrite: {
         '^/coinPriceService': ''
@@ -42,7 +41,7 @@ module.exports = function (app) {
 
   app.use(
     createProxyMiddleware('/mailService', {
-      target: 'http://139.180.147.199:8083',
+      target: 'https://mail.nika.guru',
       changeOrigin: true,
       pathRewrite: {
         '^/mailService': ''
@@ -55,7 +54,7 @@ module.exports = function (app) {
 
   app.use(
     createProxyMiddleware('/log', {
-      target: 'http://139.180.147.199:8090',
+      target: 'https://monitor.nika.guru',
       changeOrigin: true,
       pathRewrite: {
         '^/log': ''

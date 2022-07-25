@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import 'antd/dist/antd.css';
 import './index.css';
-import { Table, Tag, Form, Input, Button } from 'antd';
+import { Table, Tag, Form, Select } from 'antd';
 import axios from 'axios';
+import { timeSince } from '../utils/FormatTime';
+
+const { Option } = Select
 
 const columns = [
   {
@@ -21,64 +23,24 @@ const columns = [
     sorter: (a, b) => a.level.localeCompare(b.level),
     render: (level) => (
       <span>
-        <Tag color={level === 'infor' ? 'yellow' : level === 'error' ? 'volcano' : level === 'warning' ? 'geekblue' : 'green'}>
+        <Tag color={level === 'info' ? 'geekblue' : level === 'error' ? 'volcano' : level === 'warning' ? 'yellow' : level === 'fatal' ? 'red' : 'green'}>
           {level.toUpperCase()}
         </Tag>
       </span>
     ),
+  },
+  {
+    title: 'Label',
+    dataIndex: 'label',
+  },
+  {
+    title: 'Since',
+    dataIndex: 'time',
+    render: (time) => (
+      <div> {timeSince(time)} </div>
+    )
   }
 ];
-
-// const dataDemo = [
-//   { 
-//     "id": 1,
-//     "label": "server-http",
-//     "level":"info",
-//     "msg":"server worker started at pid 14681 listening on 127.0.0.1:8000",
-//     "service":"base",
-//     "time": "2022-07-20T15:25:06.746725+07:00"
-//   },
-//   {
-//     "id": 2,
-//     "label":"http-access",
-//     "level":"error",
-//     "msg":"token is expired",
-//     "service":"addresses-service",
-//     "time":"2022-07-20T10:14:48.278741141Z"
-//   },
-//   {
-//     "id": 3,
-//     "label":"http-access",
-//     "level":"error",
-//     "msg":"token is expired",
-//     "service":"addresses-service",
-//     "time":"2022-07-20T10:15:46.792215562Z"
-//   },
-//   {
-//     "id": 4,
-//     "label":"http-access",
-//     "level":"warning",
-//     "msg":"unauthorized method GET at URI /accounts/confirm-email/uuid=null",
-//     "service":"auth-svc",
-//     "time":"2022-07-20T10:15:58.604521475Z"
-//   },
-//   {
-//     "id": 5,
-//     "label":"http-access",
-//     "level":"error",
-//     "msg":"token is expired",
-//     "service":"addresses-service",
-//     "time":"2022-07-20T10:18:47.551878633Z"
-//   },
-//   {
-//     "id": 6,
-//     "label":"http-access",
-//     "level":"error",
-//     "msg":"token is expired",
-//     "service":"addresses-service",
-//     "time":"2022-07-20T10:19:07.536938501Z"
-//   }
-// ];
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log('params', pagination, filters, sorter, extra);
@@ -86,50 +48,49 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 const TableLog = () => {
   const [data, setData] = useState([])
+  const [filter, setFilter] = useState(false)
+  const [filterData, setFilterData] = useState([...data])
   const [form] = Form.useForm();
 
   const getData = async () => {
     await axios.get('log/logs')
       .then(res => {
-        let data = res?.data.data
+        let data = res?.data?.data
         setData(data)
       }
       )
       .catch(err => err)
   }
 
-
   useEffect(() => {
     getData()
   }, [])
 
-  console.log('DATAAAA', data)
+  // console.log(data)
+  // const onFinish = (values) => {
+  //   if (values['service'] !== undefined || values['level'] !== undefined) {
+  //     setFilter(true)
+  //     const filterData = data?.filter((item) => {
+  //       return item?.service.toLowerCase().includes(values['service'].toLowerCase())
+  //     })
+  //     setFilterData(filterData)
+  //   }
+  // }
 
-  const onReset = () => {
-    form.resetFields();
-  };
+  const onServiceClick = (value) => {
+    const filterServiceData = data?.filter((item) => {
+      setFilter(true)
+      return item?.service === value
+    })
+    setFilterData(filterServiceData)
+  }
 
-  const onFinish = (values) => {
-    const dataClone = [...data && data]
-    let listData
-    const list = () => {
-      if (values['service'] !== undefined && values['level'] !== undefined) {
-        listData = dataClone.filter((item) => (item.service === values['service'] && item.level === values['level']))
-        return listData
-      }
-      if (values['service'] !== undefined && values['level'] === undefined) {
-        listData = dataClone.filter((item) => item.service === values['service'])
-        return listData
-      }
-      if (values['service'] === undefined && values['level'] !== undefined) {
-        listData = dataClone.filter((item) => item.level === values['level'])
-        return listData
-      }
-    }
-
-    list()
-    console.log(listData)
-    setData(listData)
+  const onLevelClick = (value) => {
+    const filterLevelData = filterData?.filter((item) => {
+      setFilter(true)
+      return item?.level === value
+    })
+    setFilterData(filterLevelData)
   }
 
   useEffect(() => {
@@ -139,26 +100,50 @@ const TableLog = () => {
     return () => clearTimeout(timer)
   }, [])
 
+  // Load and remove all duplicate value
+  const serviceValue = [...new Set(
+    data?.map((item) => {
+      return item?.service
+    })
+  )]
+
+  const levelValue = [...new Set(
+    filterData?.map((item) => {
+      return item?.level
+    })
+  )]
+
   return (
     <>
-      <Form form={form} name="control-hooks" onFinish={onFinish}
-      >
+      <Form form={form} name="control-hooks">
         <Form.Item label="Service" name='service'>
-          <Input />
+          <Select
+            placeholder='Choose service'
+            onChange={onServiceClick}
+          >
+            {
+              serviceValue?.map((item, id) => (
+                <Option key={id} value={item}>{item}</Option>
+              ))
+            }
+          </Select>
         </Form.Item>
         <Form.Item label="Level" name='level'>
-          <Input />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-          <Button htmlType="button" onClick={onReset}>
-            Reset
-          </Button>
+          <Select
+            placeholder='Choose level'
+            onChange={onLevelClick}
+          >
+            {
+              levelValue?.map((item, id) => (
+                <Option key={id} value={item}>{item}</Option>
+              ))
+            }
+          </Select>
         </Form.Item>
       </Form>
-      <Table columns={columns} dataSource={data && data} onChange={onChange} />
+      <Table columns={columns}
+        dataSource={filter ? filterData : data}
+        onChange={onChange} />
     </>
   )
 }

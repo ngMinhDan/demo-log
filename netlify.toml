@@ -7,21 +7,28 @@
 
 [[redirects]]
   from = "/accountService/*"
-  to = "http://139.180.147.199:8080/:splat"
+  to = "https://accounts.nika.guru/:splat"
   status = 200
   force = true
   headers = {Access-Control-Allow-Origin = "*"}
 
 [[redirects]]
   from = "/coinPriceService/*"
-  to = "http://139.180.147.199:8081/:splat"
+  to = "https://coinsprices.nika.guru/:splat"
+  status = 200
+  force = true
+  headers = {Access-Control-Allow-Origin = "*"}
+
+[[redirects]]
+  from = "/mailService/*"
+  to = "https://mail.nika.guru/:splat"
   status = 200
   force = true
   headers = {Access-Control-Allow-Origin = "*"}
 
 [[redirects]]
   from = "/log/*"
-  to = "http://139.180.147.199:8090/:splat"
+  to = "https://monitor.nika.guru/:splat"
   status = 200
   force = true
   headers = {Access-Control-Allow-Origin = "*"}
