@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Typography } from 'antd'
-import { TeamOutlined, HomeOutlined, DashboardOutlined } from '@ant-design/icons';
+import { Layout, Menu } from 'antd'
+import { TeamOutlined, HomeOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { removeCookie, STORAGEKEY } from '../utils/storage';
 import { useDispatch } from 'react-redux';
@@ -45,15 +45,16 @@ export const SideBar = () => {
                     <span>Counter</span>
                     <NavLink to="More"></NavLink>
                 </Menu.Item>
+                <Menu.Item
+                    variant='subtitle1'
+                    onClick={logout}
+                    className=' header__link'
+                    style={{ cursor: 'pointer' }}
+                >
+                    <LogoutOutlined />
+                    <span className='logout'>Logout</span>
+                </Menu.Item>
             </Menu>
-            <Typography
-                variant='subtitle1'
-                onClick={logout}
-                className=' header__link'
-                style={{ color: '#fff', cursor: 'pointer' }}
-            >
-                Logout
-            </Typography>
         </Sider>
     )
 }
