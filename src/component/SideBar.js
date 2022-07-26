@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { removeCookie, STORAGEKEY } from '../utils/storage';
 import { useDispatch } from 'react-redux';
 import { resetUserInfo } from '../redux/userSlice';
+import './index.css'
 
 const { Sider } = Layout;
 

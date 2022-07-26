@@ -11,7 +11,41 @@
   background: #141414;
 }
 
+/* Side bar */
+.ant-layout-sider{
+
+}
+
 li.ant-menu-item:nth-child(4){
   position: absolute;
-  bottom: 6%
+  bottom: 50px
+}
+
+/* Login screen */
+
+.login-form{
+  margin: 50px;
+  padding: 50px;
+  border: solid 1px black;
+  border-radius: 15px;
+}
+
+.login-form .ant-btn-primary{
+  width: 50%;
+  border-radius: 5px;
+  height: 50px;
+}
+
+.login-form input#basic_email, .login-form input#basic_password{
+  border-radius: 5px;
+  height: 40px;
+}
+
+.login-form .ant-input-affix-wrapper {
+  padding-right: 15px;
+}
+
+button.ant-btn-primary>span{
+  font-size: 20px;
+  letter-spacing: 2px;
 }

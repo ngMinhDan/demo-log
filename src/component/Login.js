@@ -6,6 +6,7 @@ import { validateEmail } from '../utils/regex'
 import axios from 'axios'
 import { getUserInfo } from '../redux/userSlice'
 import { useDispatch } from 'react-redux'
+import './index.css'
 
 const { Text } = Typography
 export const Login = () => {
@@ -81,7 +82,7 @@ export const Login = () => {
                 <Text type='danger'>{error && error}</Text>
                 <Form.Item>
                     <Button type='primary' htmlType='submit'>
-                        Submit
+                        Login
                     </Button>
                 </Form.Item>
             </Form>
